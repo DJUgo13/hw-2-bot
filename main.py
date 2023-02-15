@@ -35,7 +35,6 @@ async def quiz1(massage: types.Message):
         'диктор канала "Мастерская настроения"',
         'оптимус прайм последний прайм'
     ]
-    # await massage.answer_poll()
     await bot.send_poll(
         chat_id=massage.from_user.id,
         question=ques,
@@ -73,8 +72,7 @@ async def quiz2(call: types.CallbackQuery):
         type='quiz',
         correct_option_id=1,
         explanation='это криминальное чтиво ты угадал',
-        open_period=15,
-
+        open_period=15
     )
 
 
@@ -99,8 +97,7 @@ async def quiz3(call: types.CallbackQuery):
         type='quiz',
         correct_option_id=3,
         explanation='это DxD ты угадал',
-        open_period=15,
-
+        open_period=15
     )
 
 
