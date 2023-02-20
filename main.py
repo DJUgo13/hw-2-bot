@@ -1,73 +1,11 @@
-from aiogram import Bot, Dispatcher, types
 from aiogram.utils import executor  # для запуска бота
 import logging
-import decouple
-from decouple import config
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-
-
-TOKEN = config('TOKEN')
-
-bot = Bot(TOKEN)
-db = Dispatcher(bot=bot)
-
-
-@db.message_handler(commands=['quiz'])
-async def quiz1(call: types.Message):
-    markup = InlineKeyboardMarkup()
-    button = InlineKeyboardButton('next', callback_data='button')
-    markup.add(button)
-    ques = 'из кокого фильма это мем?'
-    answer = [
-        'бетмен',
-        'криминально чтиво',
-        'железный человек',
-        'каратель',
-        'первый мститель'
-    ]
-    photo = open('media/c55b9821089e04e5860f5354bb5d9929.jpg', 'rb')
-    await bot.send_photo(call.from_user.id, photo=photo)
-    await bot.send_poll(
-        chat_id=call.from_user.id,
-        question=ques,
-        options=answer,
-        is_anonymous=False,
-        type='quiz',
-        correct_option_id=1,
-        explanation='это криминальное чтиво ты угадал',
-        open_period=15,
-        reply_markup=markup
-    )
-
-
-@db.callback_query_handler(text='button')
-async def quiz2(call: types.CallbackQuery):
-    ques = 'в какого аниме это фото?'
-    answer = [
-        'HOTD',
-        'ангильские ритмы',
-        'человек бензопила',
-        'DxD',
-        'необъятный океан'
-    ]
-    photo = open('media/d7c76398514577cd29fbf79636fdd59c.jpeg', 'rb')
-    await bot.send_photo(call.from_user.id, photo=photo)
-    await bot.send_poll(
-        chat_id=call.from_user.id,
-        question=ques,
-        options=answer,
-        is_anonymous=False,
-        type='quiz',
-        correct_option_id=3,
-        explanation='это DxD ты угадал',
-        open_period=15
-    )
-
-
-@db.message_handler()
-async def echo(massage: types.Message):
-    await bot.send_message(massage.from_user.id, massage.text)
-    await massage.answer('что-то еще?')
+from config import db
+# from handler.call_back import *
+from handler import client, callback, admin, extra
+extra.reg_hand_extra(db)
+callback.reg_hand_callback(db)
+client.reg_client(db)
 
 
 if __name__ == '__main__':
