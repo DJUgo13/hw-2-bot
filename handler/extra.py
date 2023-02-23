@@ -1,5 +1,5 @@
 from aiogram import types, Dispatcher
-from config import bot, db
+from config import bot, dp
 
 
 async def echo(massage: types.Message):
@@ -7,5 +7,5 @@ async def echo(massage: types.Message):
     await massage.answer('что-то еще?')
 
 
-def reg_hand_extra(db: Dispatcher):
-    db.register_message_handler(echo)
+def reg_hand_extra(dp: Dispatcher):
+    dp.register_message_handler(echo)
