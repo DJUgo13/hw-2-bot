@@ -3,7 +3,7 @@ from config import bot, dp
 
 
 async def echo(massage: types.Message):
-    bad_words = ['java', 'html', 'идиот', 'css', 'жопа']
+    bad_words = ['java', 'html', 'идиот', 'css', 'жопа', 'хуй', 'член', 'пизда']
     username = f'@{massage.from_user.username}' \
         if massage.from_user.username is not None else massage.from_user.first_name
     for word in bad_words:
