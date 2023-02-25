@@ -1,11 +1,10 @@
 from aiogram import types, Dispatcher
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from config import bot, db
+from config import bot, dp
 from keyboard.client_kb import start_markup
 
 
 async def start_handler(massage: types.Message):
-    assert isinstance(start_markup)
     await bot.send_message(massage.from_user.id, f"hi {massage.from_user.first_name}",
                            reply_markup=start_markup)
 
