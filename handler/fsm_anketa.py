@@ -27,12 +27,14 @@ async def load_name(massage: types.Message, state: FSMContext):
         date['username'] = massage.from_user.username
         date['name'] = massage.text
         print(date)
+    await FSMAdmin.next()
+    await massage.answer('сколько лет?')
 
 
 async def load_age(massage: types.Message, state: FSMContext):
     if not massage.text.isdigit():
         await massage.answer('пиши числа')
-    elif not 18 < int(massage.text) < 19:
+    elif not 16 <= int(massage.text) <= 19:
         await massage.answer('не подходишь')
     else:
         async with state.proxy() as date:
@@ -60,6 +62,27 @@ async def load_region(massage: types.Message, state: FSMContext):
 
 async def load_photo(massage: types.Message, state: FSMContext):
     print(massage)
+    async with state.proxy() as date:
+        date['photo'] = massage.photo[0].file_id
+
+        await massage.answer_photo(date["photo"],
+                                   caption=f'{date["name"]} {date["age"]} '
+                                           f'{date["gender"]}\n @{date["username"]}')
+    await FSMAdmin.next()
+    await massage.answer('norm?')
+
+
+async def submit(massage: types.Message, state: FSMContext):
+    if massage.text.lower() == "да":
+        await massage.answer('ты под защитой', reply_markup=start_markup)
+    #     запись бд
+        await state.finish()
+    elif massage.text == "миш все фигня давай по новой":
+        await massage.answer("как тебя зовут?", reply_markup=start_markup, )
+        await FSMAdmin.name.set()
+    else:
+        await massage.answer("и что?")
+
 
 
 def reg_hand_anketa(dp: Dispatcher):
