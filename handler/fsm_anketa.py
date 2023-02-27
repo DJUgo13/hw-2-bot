@@ -8,9 +8,10 @@ from keyboard.client_kb import start_markup
 class FSMAdmin(StatesGroup):
     name = State()
     age = State()
-    photo = State()
     gender = State()
     region = State()
+    photo = State()
+    submit = State()
 
 
 async def fsm_start(massage: types.Message):
@@ -84,7 +85,6 @@ async def submit(massage: types.Message, state: FSMContext):
         await massage.answer("и что?")
 
 
-
 def reg_hand_anketa(dp: Dispatcher):
     dp.register_message_handler(fsm_start, commands=['reg'])
     dp.register_message_handler(load_name, state=FSMAdmin.name)
@@ -93,3 +93,4 @@ def reg_hand_anketa(dp: Dispatcher):
     dp.register_message_handler(load_region, state=FSMAdmin.region)
     dp.register_message_handler(load_photo, state=FSMAdmin.photo,
                                 content_types=['photo'])
+    dp.register_message_handler(submit, state=FSMAdmin.submit)
