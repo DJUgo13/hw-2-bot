@@ -2,7 +2,8 @@ from aiogram import types, Dispatcher
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
-from keyboard.client_kb import start_markup
+from keyboard.client_kb import *
+from keyboard import client_kb
 
 
 class FSMAdmin(StatesGroup):
@@ -17,9 +18,9 @@ class FSMAdmin(StatesGroup):
 async def fsm_start(massage: types.Message):
     if massage.chat.type == 'private':
         await FSMAdmin.name.set()
-        await massage.answer('как тебя зовут')
+        await massage.answer('как тебя зовут', reply_markup=start_markup)
     else:
-        await massage.answer('пиши в лс')
+        await massage.answer('че ссыш пошли раз на раз', reply_markup=client_kb.cancel_markup)
 
 
 async def load_name(massage: types.Message, state: FSMContext):
@@ -42,7 +43,8 @@ async def load_age(massage: types.Message, state: FSMContext):
             date['age'] = massage.text
             print(date)
         await FSMAdmin.next()
-        await massage.answer('пол?')
+        await massage.answer('пол?',
+                             reply_markup=client_kb.gender_markup)
 
 
 async def load_gender(massage: types.Message, state: FSMContext):
@@ -58,7 +60,8 @@ async def load_region(massage: types.Message, state: FSMContext):
         date['region'] = massage.text
         print(date)
     await FSMAdmin.next()
-    await massage.answer('скинешь фото ?')
+    await massage.answer('скинешь фото ?',
+                         reply_markup=client_kb.gender_markup)
 
 
 async def load_photo(massage: types.Message, state: FSMContext):
@@ -76,7 +79,6 @@ async def load_photo(massage: types.Message, state: FSMContext):
 async def submit(massage: types.Message, state: FSMContext):
     if massage.text.lower() == "да":
         await massage.answer('ты под защитой', reply_markup=start_markup)
-    #     запись бд
         await state.finish()
     elif massage.text == "миш все фигня давай по новой":
         await massage.answer("как тебя зовут?", reply_markup=start_markup, )
@@ -85,7 +87,17 @@ async def submit(massage: types.Message, state: FSMContext):
         await massage.answer("и что?")
 
 
+async def cancel_reg(massage: types.Message, state: FSMContext):
+    currents_state = await state.get_state()
+    if currents_state is not None:
+        await state.finish()
+        await massage.answer("canceled")
+
+
 def reg_hand_anketa(dp: Dispatcher):
+    dp.register_message_handler(cancel_reg, state="*", commands=["cancel"])
+    dp.register_message_handler(cancel_reg, Text(equals="cancel", ignore_case=True), state="*")
+
     dp.register_message_handler(fsm_start, commands=['reg'])
     dp.register_message_handler(load_name, state=FSMAdmin.name)
     dp.register_message_handler(load_age, state=FSMAdmin.age)
