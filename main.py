@@ -1,8 +1,6 @@
 from aiogram.utils import executor
 import logging
-
 from config import dp
-
 from handler import client, callback, extra, admin, fsm_anketa
 
 client.reg_client(dp)

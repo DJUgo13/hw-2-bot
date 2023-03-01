@@ -19,6 +19,7 @@ async def fsm_start(massage: types.Message):
     if massage.chat.type == 'private':
         await FSMAdmin.name.set()
         await massage.answer('как тебя зовут', reply_markup=start_markup)
+        await massage.answer('?', reply_markup=client_kb.cancel_markup)
     else:
         await massage.answer('че ссыш пошли раз на раз', reply_markup=client_kb.cancel_markup)
 
@@ -30,7 +31,7 @@ async def load_name(massage: types.Message, state: FSMContext):
         date['name'] = massage.text
         print(date)
     await FSMAdmin.next()
-    await massage.answer('сколько лет?')
+    await massage.answer('возраст свой скажи свой на?')
 
 
 async def load_age(massage: types.Message, state: FSMContext):
@@ -43,7 +44,7 @@ async def load_age(massage: types.Message, state: FSMContext):
             date['age'] = massage.text
             print(date)
         await FSMAdmin.next()
-        await massage.answer('пол?',
+        await massage.answer('кто по жизни мужик или баба?',
                              reply_markup=client_kb.gender_markup)
 
 
@@ -52,7 +53,8 @@ async def load_gender(massage: types.Message, state: FSMContext):
         date['gender'] = massage.text
         print(date)
     await FSMAdmin.next()
-    await massage.answer('где живешь?')
+    await massage.answer('Где живешь брат эже?',
+                         reply_markup=client_kb.gender_markup)
 
 
 async def load_region(massage: types.Message, state: FSMContext):
@@ -73,14 +75,15 @@ async def load_photo(massage: types.Message, state: FSMContext):
                                    caption=f'{date["name"]} {date["age"]} '
                                            f'{date["gender"]}\n @{date["username"]}')
     await FSMAdmin.next()
-    await massage.answer('norm?')
+    await massage.answer('norm?',
+                         reply_markup=client_kb.submit_markup)
 
 
 async def submit(massage: types.Message, state: FSMContext):
     if massage.text.lower() == "да":
-        await massage.answer('ты под защитой', reply_markup=start_markup)
+        await massage.answer('все заебись', reply_markup=start_markup)
         await state.finish()
-    elif massage.text == "миш все фигня давай по новой":
+    elif massage.text == "хуево, переделывай":
         await massage.answer("как тебя зовут?", reply_markup=start_markup, )
         await FSMAdmin.name.set()
     else:
