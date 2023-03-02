@@ -54,7 +54,7 @@ async def load_gender(massage: types.Message, state: FSMContext):
         print(date)
     await FSMAdmin.next()
     await massage.answer('Где живешь брат эже?',
-                         reply_markup=client_kb.gender_markup)
+                         reply_markup=client_kb.cancel_markup)
 
 
 async def load_region(massage: types.Message, state: FSMContext):
@@ -63,7 +63,7 @@ async def load_region(massage: types.Message, state: FSMContext):
         print(date)
     await FSMAdmin.next()
     await massage.answer('скинешь фото ?',
-                         reply_markup=client_kb.gender_markup)
+                         reply_markup=client_kb.cancel_markup)
 
 
 async def load_photo(massage: types.Message, state: FSMContext):
